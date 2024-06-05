@@ -17,8 +17,8 @@ final loadingNotifierProvider =
   return LoadingNotifier();
 });
 
-class failureNotifier extends StateNotifier<bool> {
-  failureNotifier() : super(false);
+class FailureNotifier extends StateNotifier<bool> {
+  FailureNotifier() : super(false);
 
   isError() {
     state = true;
@@ -30,6 +30,6 @@ class failureNotifier extends StateNotifier<bool> {
 }
 
 final failureNotifierProvider =
-    StateNotifierProvider<failureNotifier, bool>((ref) {
-  return failureNotifier();
+    StateNotifierProvider<FailureNotifier, bool>((ref) {
+  return FailureNotifier();
 });

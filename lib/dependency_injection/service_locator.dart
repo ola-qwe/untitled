@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:untitled/core/routes/app_router.dart';
 import 'package:untitled/core/shared_preferences/shared_preferences_helper.dart';
-import 'package:untitled/core/ui/network.dart';
+import 'package:untitled/core/network/network.dart';
 import 'package:untitled/feature/authorization/data/data_source/authorization_data_source.dart';
 import 'package:untitled/feature/authorization/data/network/authorization_api_client.dart';
 import 'package:untitled/feature/authorization/data/repository/authorization_repository.dart';
@@ -27,8 +27,7 @@ Future<void> setupLocator() async {
       sharedPreferences,
     ),
   );
-  getIt.registerSingleton<Dio>(
-      NetworkModule.provideDio());
+  getIt.registerSingleton<Dio>(NetworkModule.provideDio());
 //api
   getIt.registerLazySingleton<AuthorizationApiClient>(
     () => AuthorizationApiClient(
@@ -36,7 +35,7 @@ Future<void> setupLocator() async {
     ),
   );
   getIt.registerLazySingleton<TodosApiClient>(
-        () => TodosApiClient(
+    () => TodosApiClient(
       getIt<Dio>(),
     ),
   );
@@ -44,21 +43,18 @@ Future<void> setupLocator() async {
   getIt.registerLazySingleton<AuthorizationRemoteDataSource>(
     () => AuthorizationRemoteDataSourceImplementer(
         signInApiClient: getIt<AuthorizationApiClient>()),
-
   );
   getIt.registerLazySingleton<TodosRemoteDataSource>(
-        () => TodosRemoteDataSourceImplementer(
-       api: getIt<TodosApiClient>()),
-
+    () => TodosRemoteDataSourceImplementer(api: getIt<TodosApiClient>()),
   );
 //repo
   getIt.registerLazySingleton<TodosRepository>(
-        () => TodosRepositoryImplementer(
-          todosRemoteDataSource: getIt<TodosRemoteDataSource>(),
+    () => TodosRepositoryImplementer(
+      todosRemoteDataSource: getIt<TodosRemoteDataSource>(),
     ),
   );
   getIt.registerLazySingleton<AuthorizationRepository>(
-        () => AuthorizationRepositoryImplementer(
+    () => AuthorizationRepositoryImplementer(
       authorizationRemoteDataSource: getIt<AuthorizationRemoteDataSource>(),
     ),
   );

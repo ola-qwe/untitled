@@ -4,8 +4,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:untitled/core/routes/app_router.dart';
-import 'package:untitled/feature/authorization/presentation/states/loading_notifier.dart';
 import 'package:untitled/feature/authorization/presentation/states/sign_in_notifier.dart';
+import 'package:untitled/feature/todos/presentation/states/loading_notifier.dart';
 import 'package:untitled/feature/todos/presentation/states/todos_notifier.dart';
 import 'package:untitled/feature/todos/presentation/widgets/todo_item.dart';
 
