@@ -18,7 +18,8 @@ class SignInNotifier extends StateNotifier<SignInResponse?> {
           username: username, password: password);
       load.stopLoading();
     } catch (e) {
-     // load.stopLoading();
+      load.stopLoading();
+      print("error");
     }
   }
 }

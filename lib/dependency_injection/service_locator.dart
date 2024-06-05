@@ -6,6 +6,11 @@ import 'package:untitled/core/shared_preferences/shared_preferences_helper.dart'
 import 'package:untitled/feature/authorization/data/data_source/authorization_data_source.dart';
 import 'package:untitled/feature/authorization/data/network/authorization_api_client.dart';
 import 'package:untitled/feature/authorization/data/repository/authorization_repository.dart';
+import 'package:untitled/feature/todos/data/data_source/todos_data_source.dart';
+import 'package:untitled/feature/todos/data/data_source/todos_data_source_implementer.dart';
+import 'package:untitled/feature/todos/data/network/todos_api_client.dart';
+import 'package:untitled/feature/todos/data/repository/todos_repository.dart';
+import 'package:untitled/feature/todos/domain/repository/todos_repository_implementer.dart';
 
 import '../feature/authorization/data/data_source/authorization_data_source_implementer.dart';
 import '../feature/authorization/domain/repository/authorization_repository_implementer.dart';
@@ -28,13 +33,28 @@ Future<void> setupLocator() async {
       getIt<Dio>(),
     ),
   );
-
+  getIt.registerLazySingleton<TodosApiClient>(
+        () => TodosApiClient(
+      getIt<Dio>(),
+    ),
+  );
   //      data source
   getIt.registerLazySingleton<AuthorizationRemoteDataSource>(
     () => AuthorizationRemoteDataSourceImplementer(
         signInApiClient: getIt<AuthorizationApiClient>()),
+
+  );
+  getIt.registerLazySingleton<TodosRemoteDataSource>(
+        () => TodosRemoteDataSourceImplementer(
+       api: getIt<TodosApiClient>()),
+
   );
 //repo
+  getIt.registerLazySingleton<TodosRepository>(
+        () => TodosRepositoryImplementer(
+          todosRemoteDataSource: getIt<TodosRemoteDataSource>(),
+    ),
+  );
   getIt.registerLazySingleton<AuthorizationRepository>(
         () => AuthorizationRepositoryImplementer(
       authorizationRemoteDataSource: getIt<AuthorizationRemoteDataSource>(),
