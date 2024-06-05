@@ -21,6 +21,16 @@ class SignInPage extends HookConsumerWidget {
     final userNameController = useTextEditingController();
     final passwordController = useTextEditingController();
     final load = ref.watch(loadingNotifierProvider);
+    final error=ref.watch(failureNotifierProvider);
+    final signInNotifierNotifier=ref.watch(signInNotifierNotifierProvider);
+
+    if(error){
+      Fluttertoast.showToast(
+          msg: "enter name and password please");
+    }
+    if(signInNotifierNotifier!=null){
+      AutoRouter.of(context).replace(const TodoPageRoute());
+    }
     return Scaffold(
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
@@ -66,7 +76,7 @@ class SignInPage extends HookConsumerWidget {
                     if (load)
                       const Center(
                         child: CircularProgressIndicator(
-                          color: Colors.green,
+                          color: Colors.blue,
                           strokeWidth: 2.0,
                         ),
                       ),

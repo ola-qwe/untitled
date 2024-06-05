@@ -1,5 +1,5 @@
 class EndPoint {
-  static const String url = 'http://dummyjson.com/';
+  static const String url = 'https://dummyjson.com/';
   static const String signIn = 'auth/login';
   static const String todos ='todos';
 

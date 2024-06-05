@@ -33,7 +33,7 @@ class _AuthorizationApiClient implements AuthorizationApiClient {
     )
             .compose(
               _dio.options,
-              'http://dummyjson.com/auth/login',
+              'auth/login',
               queryParameters: queryParameters,
               data: _data,
             )

@@ -32,7 +32,7 @@ abstract class TodosApiClient {
     ));
     return _TodosApiClient(dio);
   }*/
-  @POST(EndPoint.todos)
+  @GET(EndPoint.todos)
   Future<TodoList> getTodos({
     @Query("skip") int? skip,
     @Query("limit") int? limit,

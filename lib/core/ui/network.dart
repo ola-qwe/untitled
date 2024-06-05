@@ -8,15 +8,17 @@ abstract class NetworkModule {
   /// Calling it multiple times will return the same instance.
   static Dio provideDio() {
     final dio = Dio();
-
+    String host = '<calculated when request is sent>';
     dio
       ..options.baseUrl = EndPoint.url
-     // ..options.connectTimeout = EndPoint.connectTimeout
-     // ..options.receiveTimeout = EndPoint.receiveTimeout
+      ..options.connectTimeout = EndPoint.connectTimeout
+      ..options.receiveTimeout = EndPoint.receiveTimeout
+      ..options.sendTimeout = EndPoint.receiveTimeout
       ..options.headers = {
         'Content-Type': 'application/json; charset=utf-8',
          'Accept': 'application/json',
-       // 'X-Requested-With': 'XMLHttpRequest',
+      //  'Host': host,
+        'X-Requested-With': 'XMLHttpRequest',
       }
       ..interceptors.add(LogInterceptor(
         request: true,
