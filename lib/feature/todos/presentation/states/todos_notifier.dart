@@ -3,15 +3,14 @@ import 'package:untitled/dependency_injection/service_locator.dart';
 import 'package:untitled/feature/authorization/presentation/states/loading_notifier.dart';
 import 'package:untitled/feature/todos/data/repository/todos_repository.dart';
 import 'package:untitled/feature/todos/data/responce/todos_list_state.dart';
-import 'package:untitled/feature/todos/data/responce/todos_responce.dart';
 
-class SignInNotifier extends StateNotifier<TodosListState> {
-  SignInNotifier({required this.ref, required this.todosRepository})
+class TodosNotifier extends StateNotifier<TodosListState> {
+  TodosNotifier({required this.ref, required this.todosRepository})
       : super(TodosListState.unknown());
   final TodosRepository todosRepository;
-  final StateNotifierProviderRef<SignInNotifier, TodosListState> ref;
+  final StateNotifierProviderRef<TodosNotifier, TodosListState> ref;
 
-  Future<void> fetchData(int productId) async {
+  Future<void> fetchData() async {
     final loadingNotifier = ref.read(loadingNotifierProvider.notifier);
 
     try {
@@ -22,22 +21,24 @@ class SignInNotifier extends StateNotifier<TodosListState> {
       }
       final todosResponse =
           await todosRepository.getTodos(skip: state.currentPage, limit: 10);
+/*
       // Create a set of all current product IDs for fast lookup.
-      final currentReviewIds = state.todos.map((product) => product.id).toSet();
+      final currentReviewIds = state.todos.map((todo) => todo.id).toSet();
 
       // Filter the new reviews to only include those with IDs not already present.
       final newUniqueReviews = todosResponse.todos
-          .where((newReview) => !currentReviewIds.contains(newReview.id))
+          .where((todo) => !currentReviewIds.contains(todo.id))
           .toList();
 
       // Add the filtered list of new, unique reviews to the updated reviews list.
       final updatedReviews = List<Todo>.from(state.todos)
         ..addAll(newUniqueReviews);
+*/
 
       state = state.copyWith(
-        todos: updatedReviews,
+        todos: todosResponse.todos,
         currentPage: todosResponse.skip + 1,
-        isLastPage: (todosResponse.total>state.todos.length)?false:true,
+        isLastPage: (todosResponse.total > state.todos.length) ? false : true,
       );
     } catch (error) {
       loadingNotifier.stopLoading();
@@ -48,9 +49,9 @@ class SignInNotifier extends StateNotifier<TodosListState> {
   }
 }
 
-final signInNotifierNotifierProvider =
-    StateNotifierProvider<SignInNotifier, TodosListState>((ref) {
-  return SignInNotifier(
+final todosNotifierProvider =
+    StateNotifierProvider<TodosNotifier, TodosListState>((ref) {
+  return TodosNotifier(
     ref: ref,
     todosRepository: getIt<TodosRepository>(),
   );

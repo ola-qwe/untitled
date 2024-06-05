@@ -18,6 +18,6 @@ class AuthorizationRepositoryImplementer implements AuthorizationRepository {
     int? expiresInMins,
   }) {
     return authorizationRemoteDataSource.signIn(
-        username: username, password: password, expiresInMins: expiresInMins);
+        username: username, password: password, expiresInMins: expiresInMins??60);
   }
 }

@@ -12,7 +12,7 @@ _$TodosListStateImpl _$$TodosListStateImplFromJson(Map<String, dynamic> json) =>
           .map((e) => Todo.fromJson(e as Map<String, dynamic>))
           .toList(),
       isLastPage: json['isLastPage'] as bool,
-      currentPage: json['currentPage'] as int,
+      currentPage: (json['currentPage'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$TodosListStateImplToJson(

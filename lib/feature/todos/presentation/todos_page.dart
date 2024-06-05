@@ -4,89 +4,67 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:untitled/core/routes/app_router.dart';
-import 'package:untitled/core/ui/app_assets.dart';
 import 'package:untitled/feature/authorization/presentation/states/loading_notifier.dart';
-import 'package:untitled/feature/authorization/presentation/states/sign_in_notifier.dart';
-import 'package:untitled/feature/authorization/presentation/widgets/button.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:untitled/feature/todos/presentation/states/todos_notifier.dart';
 
-@RoutePage(name: RoutesNames.signInPage)
+@RoutePage(name: RoutesNames.todoPage)
 class SignInPage extends HookConsumerWidget {
   const SignInPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final ScrollController scrollController = useScrollController();
-    final userNameController = useTextEditingController();
-    final passwordController = useTextEditingController();
-    final load=ref.watch(loadingNotifierProvider);
+    final load = ref.watch(loadingNotifierProvider);
+    final todosList = ref.watch(todosNotifierProvider).todos;
+
+    void fetchData() {
+      ref.read(todosNotifierProvider.notifier).fetchData();
+    }
+
+    void onScroll() {
+      final isNearBottom = scrollController.position.pixels >=
+          scrollController.position.maxScrollExtent - 200;
+      if (isNearBottom &&
+          !load &&
+          !ref.watch(todosNotifierProvider).isLastPage) {
+        fetchData();
+      }
+    }
+
+    useEffect(() {
+      Future.microtask(() => fetchData());
+      scrollController.addListener(onScroll);
+      return () => scrollController.removeListener(onScroll);
+    }, []);
     return Scaffold(
+      appBar: AppBar(title: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text("Todos"),
+        ],
+      ),
+      elevation: 0.6,),
       body: SingleChildScrollView(
         physics: const AlwaysScrollableScrollPhysics(),
         controller: scrollController,
-        child: Stack(
-          children: [
-            SizedBox(
-                height:800.h,
-                width: double.infinity,
-                child: Image.asset(AppAssets.imageSignIn,
-                  fit: BoxFit.fill,)),
-            Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-
-                     SizedBox(height: 350.h),
-                    TextField(
-                      controller: userNameController,
-                      decoration: const InputDecoration(
-                        labelText: 'Username',
-                        filled: true,
-                        fillColor: Colors.white,
-                        prefixIcon: Icon(Icons.person),
-                        border: OutlineInputBorder(
-                        ),
-                      ),
-                    ),
-                     SizedBox(height: 20.h),
-                    TextField(
-                      controller: passwordController,
-                      obscureText: true,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        filled: true,
-                        fillColor: Colors.white,
-                        prefixIcon: Icon(Icons.lock),
-                        border: OutlineInputBorder(),
-                      ),
-                    ),
-                     SizedBox(height: 20.h),
-                    if(load)
-                    const Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.green,
-                        strokeWidth: 2.0,
-                      ),
-                    ),
-                    if(!load)
-                    button(
-                        title: "Sign In",
-                        tab: () {
-                          if( userNameController.value.text.isNotEmpty && passwordController.value.text.isNotEmpty) {
-                              ref
-                                  .read(signInNotifierNotifierProvider.notifier)
-                                  .signIn(userNameController.value.text,
-                                      passwordController.value.text);
-                            }else{
-                            Fluttertoast.showToast(
-                                msg:"enter name and password please");
-                          }
-                          })
-                  ],
-                )),
-          ],
-        ),
+        child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 200.h,
+                  child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: todosList.length,
+                    itemBuilder: (context, index) {
+                      return Text(todosList[index].todo);
+                    },
+                  ),
+                )
+              ],
+            )),
       ),
     );
   }

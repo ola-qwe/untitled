@@ -33,13 +33,13 @@ class _TodosApiClient implements TodosApiClient {
     const Map<String, dynamic>? _data = null;
     final _result =
         await _dio.fetch<Map<String, dynamic>>(_setStreamType<TodoList>(Options(
-      method: 'POST',
+      method: 'GET',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              'https://dummyjson.com/todos',
+              'todos',
               queryParameters: queryParameters,
               data: _data,
             )
